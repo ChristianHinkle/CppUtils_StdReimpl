@@ -85,7 +85,6 @@ target_sources(${MY_BASE_PROJECT_NAME_FULL}_Include
       BASE_DIRS
         "${CMAKE_CURRENT_SOURCE_DIR}/Include"
       FILES
-        "${CMAKE_CURRENT_SOURCE_DIR}/Include/CppUtils_StdReimpl.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/Include/${MY_BASE_PROJECT_NAME_FULL}/Concepts.h"
   )
 

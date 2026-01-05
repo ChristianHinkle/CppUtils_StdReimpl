@@ -34,15 +34,3 @@ add_test(
     --build ${CMAKE_CURRENT_BINARY_DIR}
     --target IncludeCompileTest
   )
-
-add_library(NonLvalueReference STATIC EXCLUDE_FROM_ALL)
-target_compile_features(NonLvalueReference PUBLIC cxx_std_20)
-target_sources(NonLvalueReference PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Source/NonLvalueReference.cpp")
-target_link_libraries(NonLvalueReference PRIVATE ${MY_BASE_PROJECT_NAME_NAMESPACE}::${MY_BASE_PROJECT_NAME_LEAFNAME}::Include)
-
-add_test(
-  NAME CppUtils.StdReimpl.NonLvalueReference
-  COMMAND ${CMAKE_COMMAND}
-    --build ${CMAKE_CURRENT_BINARY_DIR}
-    --target NonLvalueReference
-  )
