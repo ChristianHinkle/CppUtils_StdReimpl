@@ -3,8 +3,9 @@
 #pragma once
 
 #include <type_traits>
-#include <CppUtils_StdReimpl/Std.h>
+#include <CppUtils_StdReimpl/Concepts.h>
 
+// TODO: [todo] Move this non-std-related stuff to the core/misc libraries.
 namespace CppUtils::StdReimpl
 {
     template <class T>
@@ -28,8 +29,8 @@ namespace CppUtils::StdReimpl
     concept NonLvalueReference = !LvalueReference<T>;
 
     template <class T, class TBase>
-    concept PointerToDerivedFrom = Pointer<T> && Std::derived_from<std::remove_pointer_t<T>, TBase>;
+    concept PointerToDerivedFrom = Pointer<T> && StdReimpl::Concepts::derived_from<std::remove_pointer_t<T>, TBase>;
 
     template <class T, class TBase>
-    concept ReferenceToDerivedFrom = Reference<T> && Std::derived_from<std::remove_reference_t<T>, TBase>;
+    concept ReferenceToDerivedFrom = Reference<T> && StdReimpl::Concepts::derived_from<std::remove_reference_t<T>, TBase>;
 }
