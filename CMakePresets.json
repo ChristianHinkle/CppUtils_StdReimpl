@@ -14,59 +14,59 @@
     ],
     "testPresets": [
         {
-            "name": "cpputils-concepts-base",
+            "name": "cpputils-stdreimpl-base",
             "hidden": true,
             "filter": {
                 "include": {
-                    "name": "CppUtils.Concepts."
+                    "name": "CppUtils.StdReimpl."
                 }
             }
         },
         {
-            "name": "cpputils-concepts-win-debug",
-            "displayName": "CppUtils.Concepts - Windows Debug",
+            "name": "cpputils-stdreimpl-win-debug",
+            "displayName": "CppUtils.StdReimpl - Windows Debug",
             "inherits": [
-                "cpputils-concepts-base",
+                "cpputils-stdreimpl-base",
                 "win-debug"
             ]
         },
         {
-            "name": "cpputils-concepts-win-release",
-            "displayName": "CppUtils.Concepts - Windows Release",
+            "name": "cpputils-stdreimpl-win-release",
+            "displayName": "CppUtils.StdReimpl - Windows Release",
             "inherits": [
-                "cpputils-concepts-base",
+                "cpputils-stdreimpl-base",
                 "win-release"
             ]
         },
         {
-            "name": "cpputils-concepts-linux-debug",
-            "displayName": "CppUtils.Concepts - Linux Debug",
+            "name": "cpputils-stdreimpl-linux-debug",
+            "displayName": "CppUtils.StdReimpl - Linux Debug",
             "inherits": [
-                "cpputils-concepts-base",
+                "cpputils-stdreimpl-base",
                 "linux-debug"
             ]
         },
         {
-            "name": "cpputils-concepts-linux-release",
-            "displayName": "CppUtils.Concepts - Linux Release",
+            "name": "cpputils-stdreimpl-linux-release",
+            "displayName": "CppUtils.StdReimpl - Linux Release",
             "inherits": [
-                "cpputils-concepts-base",
+                "cpputils-stdreimpl-base",
                 "linux-release"
             ]
         },
         {
-            "name": "cpputils-concepts-macos-debug",
-            "displayName": "CppUtils.Concepts - macOS Debug",
+            "name": "cpputils-stdreimpl-macos-debug",
+            "displayName": "CppUtils.StdReimpl - macOS Debug",
             "inherits": [
-                "cpputils-concepts-base",
+                "cpputils-stdreimpl-base",
                 "macos-debug"
             ]
         },
         {
-            "name": "cpputils-concepts-macos-release",
-            "displayName": "CppUtils.Concepts - macOS Release",
+            "name": "cpputils-stdreimpl-macos-release",
+            "displayName": "CppUtils.StdReimpl - macOS Release",
             "inherits": [
-                "cpputils-concepts-base",
+                "cpputils-stdreimpl-base",
                 "macos-release"
             ]
         }

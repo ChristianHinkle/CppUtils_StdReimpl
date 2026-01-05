@@ -5,11 +5,11 @@ cmake_minimum_required(VERSION 4.0)
 # Write out the main project name here, in one place, to make renaming easier. This is mainly used by our
 # boilerplate code. There may be other mentions of the project's name mixed in certain places of this file, so
 # don't rely on these variables alone for renaming.
-SET(MY_BASE_PROJECT_NAME_FULL "CppUtils_Concepts")
+SET(MY_BASE_PROJECT_NAME_FULL "CppUtils_StdReimpl")
 string(TOLOWER ${MY_BASE_PROJECT_NAME_FULL} MY_BASE_PROJECT_NAME_FULL_LOWERCASE)
 string(TOUPPER ${MY_BASE_PROJECT_NAME_FULL} MY_BASE_PROJECT_NAME_FULL_UPPERCASE)
 SET(MY_BASE_PROJECT_NAME_NAMESPACE "CppUtils")
-SET(MY_BASE_PROJECT_NAME_LEAFNAME "Concepts")
+SET(MY_BASE_PROJECT_NAME_LEAFNAME "StdReimpl")
 
 project(${MY_BASE_PROJECT_NAME_FULL}_Tests
   VERSION 0.1.0
@@ -29,7 +29,7 @@ target_link_libraries(IncludeCompileTest PRIVATE ${MY_BASE_PROJECT_NAME_NAMESPAC
 
 # This test simply ensures that our header files' code compiles successfully when included in a cpp file.
 add_test(
-  NAME CppUtils.Concepts.IncludeCompileTest
+  NAME CppUtils.StdReimpl.IncludeCompileTest
   COMMAND ${CMAKE_COMMAND}
     --build ${CMAKE_CURRENT_BINARY_DIR}
     --target IncludeCompileTest
@@ -41,7 +41,7 @@ target_sources(NonLvalueReference PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Source/No
 target_link_libraries(NonLvalueReference PRIVATE ${MY_BASE_PROJECT_NAME_NAMESPACE}::${MY_BASE_PROJECT_NAME_LEAFNAME}::Include)
 
 add_test(
-  NAME CppUtils.Concepts.NonLvalueReference
+  NAME CppUtils.StdReimpl.NonLvalueReference
   COMMAND ${CMAKE_COMMAND}
     --build ${CMAKE_CURRENT_BINARY_DIR}
     --target NonLvalueReference

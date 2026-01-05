@@ -3,9 +3,9 @@
 #pragma once
 
 #include <type_traits>
-#include <CppUtils_Concepts/Std.h>
+#include <CppUtils_StdReimpl/Std.h>
 
-namespace CppUtils::Concepts
+namespace CppUtils::StdReimpl
 {
     template <class T>
     concept Pointer = std::is_pointer_v<T>;

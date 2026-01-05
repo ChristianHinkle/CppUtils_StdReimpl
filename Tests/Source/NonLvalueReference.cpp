@@ -1,18 +1,18 @@
 // Copyright (c) 2023-2025 Christian Hinkle, Brian Hinkle.
 
-#include <CppUtils_Concepts.h>
+#include <CppUtils_StdReimpl.h>
 
 // Perform the basic sanity checks first.
-static_assert(CppUtils::Concepts::NonLvalueReference<int>);
-static_assert(CppUtils::Concepts::NonLvalueReference<int&&>);
-static_assert(!CppUtils::Concepts::NonLvalueReference<int&>);
+static_assert(CppUtils::StdReimpl::NonLvalueReference<int>);
+static_assert(CppUtils::StdReimpl::NonLvalueReference<int&&>);
+static_assert(!CppUtils::StdReimpl::NonLvalueReference<int&>);
 
 namespace
 {
     /**
      * @brief This example function only accepts rvalues.
      */
-    template <CppUtils::Concepts::NonLvalueReference T>
+    template <CppUtils::StdReimpl::NonLvalueReference T>
     constexpr void MyNonLvalueReferenceFunc(T&& arg)
     {
     }

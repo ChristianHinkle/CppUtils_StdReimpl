@@ -3,11 +3,11 @@
 # Write out the main project name here, in one place, to make renaming easier. This is mainly used by our
 # boilerplate code. There may be other mentions of the project's name mixed in certain places of this file, so
 # don't rely on these variables alone for renaming.
-SET(MY_BASE_PROJECT_NAME_FULL "CppUtils_Concepts")
+SET(MY_BASE_PROJECT_NAME_FULL "CppUtils_StdReimpl")
 string(TOLOWER ${MY_BASE_PROJECT_NAME_FULL} MY_BASE_PROJECT_NAME_FULL_LOWERCASE)
 string(TOUPPER ${MY_BASE_PROJECT_NAME_FULL} MY_BASE_PROJECT_NAME_FULL_UPPERCASE)
 SET(MY_BASE_PROJECT_NAME_NAMESPACE "CppUtils")
-SET(MY_BASE_PROJECT_NAME_LEAFNAME "Concepts")
+SET(MY_BASE_PROJECT_NAME_LEAFNAME "StdReimpl")
 
 include(CMakeFindDependencyMacro)
 

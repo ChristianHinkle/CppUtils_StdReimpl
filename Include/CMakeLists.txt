@@ -5,11 +5,11 @@ cmake_minimum_required(VERSION 4.0)
 # Write out the main project name here, in one place, to make renaming easier. This is mainly used by our
 # boilerplate code. There may be other mentions of the project's name mixed in certain places of this file, so
 # don't rely on these variables alone for renaming.
-SET(MY_BASE_PROJECT_NAME_FULL "CppUtils_Concepts")
+SET(MY_BASE_PROJECT_NAME_FULL "CppUtils_StdReimpl")
 string(TOLOWER ${MY_BASE_PROJECT_NAME_FULL} MY_BASE_PROJECT_NAME_FULL_LOWERCASE)
 string(TOUPPER ${MY_BASE_PROJECT_NAME_FULL} MY_BASE_PROJECT_NAME_FULL_UPPERCASE)
 SET(MY_BASE_PROJECT_NAME_NAMESPACE "CppUtils")
-SET(MY_BASE_PROJECT_NAME_LEAFNAME "Concepts")
+SET(MY_BASE_PROJECT_NAME_LEAFNAME "StdReimpl")
 
 project(${MY_BASE_PROJECT_NAME_FULL}_Include
   VERSION 0.1.0
@@ -85,7 +85,7 @@ target_sources(${MY_BASE_PROJECT_NAME_FULL}_Include
       BASE_DIRS
         "${CMAKE_CURRENT_SOURCE_DIR}/Include"
       FILES
-        "${CMAKE_CURRENT_SOURCE_DIR}/Include/CppUtils_Concepts.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Include/CppUtils_StdReimpl.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/Include/${MY_BASE_PROJECT_NAME_FULL}/Std.h"
   )
 
