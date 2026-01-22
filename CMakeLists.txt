@@ -37,6 +37,26 @@ FetchContent_Declare(${MY_BASE_PROJECT_NAME_FULL}_Include
   SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Include"
   )
 
+FetchContent_Declare(${MY_BASE_PROJECT_NAME_FULL}_Source
+  SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Source"
+  )
+
+FetchContent_Declare(${MY_BASE_PROJECT_NAME_FULL}_Static
+  SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Static"
+  )
+
+FetchContent_Declare(${MY_BASE_PROJECT_NAME_FULL}_Shared
+  SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Shared"
+  )
+
+FetchContent_Declare(${MY_BASE_PROJECT_NAME_FULL}_Module
+  SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Module"
+  )
+
+FetchContent_Declare(${MY_BASE_PROJECT_NAME_FULL}_Object
+  SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Object"
+  )
+
 if(BUILD_TESTING)
   FetchContent_Declare(${MY_BASE_PROJECT_NAME_FULL}_Tests
     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Tests"
@@ -46,6 +66,16 @@ endif()
 # Add subprojects.
 
 FetchContent_MakeAvailable(${MY_BASE_PROJECT_NAME_FULL}_Include)
+
+FetchContent_MakeAvailable(${MY_BASE_PROJECT_NAME_FULL}_Source)
+
+FetchContent_MakeAvailable(${MY_BASE_PROJECT_NAME_FULL}_Static)
+
+FetchContent_MakeAvailable(${MY_BASE_PROJECT_NAME_FULL}_Shared)
+
+FetchContent_MakeAvailable(${MY_BASE_PROJECT_NAME_FULL}_Module)
+
+FetchContent_MakeAvailable(${MY_BASE_PROJECT_NAME_FULL}_Object)
 
 if(BUILD_TESTING)
   FetchContent_MakeAvailable(${MY_BASE_PROJECT_NAME_FULL}_Tests)

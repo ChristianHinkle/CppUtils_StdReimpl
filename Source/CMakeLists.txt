@@ -11,12 +11,13 @@ string(TOUPPER ${MY_BASE_PROJECT_NAME_FULL} MY_BASE_PROJECT_NAME_FULL_UPPERCASE)
 SET(MY_BASE_PROJECT_NAME_NAMESPACE "CppUtils")
 SET(MY_BASE_PROJECT_NAME_LEAFNAME "StdReimpl")
 
-project(${MY_BASE_PROJECT_NAME_FULL}_Include
+project(${MY_BASE_PROJECT_NAME_FULL}_Source
   VERSION 0.1.0
   LANGUAGES CXX
   )
 
 include(GNUInstallDirs)
+include(MyGNUInstallDirs)
 
 #
 # Create targets.
@@ -25,7 +26,7 @@ include(GNUInstallDirs)
 # the DAM library of MeddySDK, we name it "MeddySDK_DAM" instead of just "DAM", because that would be very vague.
 #
 
-add_library(${MY_BASE_PROJECT_NAME_FULL}_Include INTERFACE)
+add_library(${MY_BASE_PROJECT_NAME_FULL}_Source INTERFACE)
 
 #
 # Set output names of our targets.
@@ -34,7 +35,7 @@ add_library(${MY_BASE_PROJECT_NAME_FULL}_Include INTERFACE)
 # target name. E.g., for MeddySDKCLI, we name its executable file "meddy" to suit our desired command line usage.
 #
 
-set_target_properties(${MY_BASE_PROJECT_NAME_FULL}_Include
+set_target_properties(${MY_BASE_PROJECT_NAME_FULL}_Source
   PROPERTIES
     OUTPUT_NAME "${MY_BASE_PROJECT_NAME_FULL}"
   )
@@ -54,10 +55,10 @@ set_target_properties(${MY_BASE_PROJECT_NAME_FULL}_Include
 # `FetchContent_Declare()`.
 #
 
-add_library(${MY_BASE_PROJECT_NAME_NAMESPACE}::${MY_BASE_PROJECT_NAME_LEAFNAME}::Include ALIAS ${MY_BASE_PROJECT_NAME_FULL}_Include)
+add_library(${MY_BASE_PROJECT_NAME_NAMESPACE}::${MY_BASE_PROJECT_NAME_LEAFNAME}::Source ALIAS ${MY_BASE_PROJECT_NAME_FULL}_Source)
 
 # List out required language features.
-target_compile_features(${MY_BASE_PROJECT_NAME_FULL}_Include
+target_compile_features(${MY_BASE_PROJECT_NAME_FULL}_Source
   INTERFACE
     cxx_std_20
   )
@@ -74,21 +75,58 @@ target_compile_features(${MY_BASE_PROJECT_NAME_FULL}_Include
 #
 # A nice benefit of listing all header files is that they can be easily-discoverable by IDEs.
 #
-# We make sure to group all of our header files into a subfolder named after our project. This is
-# important for avoiding include file path naming conflicts with other libraries. It also gives
-# us the freedom to name our files however, while still having context in their include path names.
-#
-target_sources(${MY_BASE_PROJECT_NAME_FULL}_Include
+target_sources(${MY_BASE_PROJECT_NAME_FULL}_Source
   INTERFACE
-    FILE_SET ${MY_BASE_PROJECT_NAME_FULL_LOWERCASE}_include_interface_headers
+    FILE_SET ${MY_BASE_PROJECT_NAME_FULL_LOWERCASE}_source_interface_headers
       TYPE HEADERS
       BASE_DIRS
-        "${CMAKE_CURRENT_SOURCE_DIR}/Include"
+        #
+        # Base directory of private headers.
+        #
+        # It's nice to leave the "Source" directory out of this base include path so that, for
+        # cpp include statements, you have to type "Source/" to access the non-public headers. This
+        # makes it obvious for programmers when a header shouldn't be included in public files.
+        #
+        "${CMAKE_CURRENT_SOURCE_DIR}"
       FILES
-        "${CMAKE_CURRENT_SOURCE_DIR}/Include/${MY_BASE_PROJECT_NAME_FULL}_Export.h"
-        "${CMAKE_CURRENT_SOURCE_DIR}/Include/${MY_BASE_PROJECT_NAME_FULL}_include_export.h"
-        "${CMAKE_CURRENT_SOURCE_DIR}/Include/${MY_BASE_PROJECT_NAME_FULL}/Concepts.h"
+        # Add all private header files.
   )
+
+# Add all source files.
+block(SCOPE_FOR VARIABLES)
+
+  # List of all source files (relative to our "Source" directory).
+  set(MyTargetSources
+    "${MY_BASE_PROJECT_NAME_FULL}_Export.cpp"
+    )
+
+  # Add source file paths for `BUILD_LOCAL_INTERFACE` users.
+  block(SCOPE_FOR VARIABLES)
+    # Wrap each source file path in the conditional generator expression.
+    set(MyTargetSourcesBuildLocalInterface ${MyTargetSources})
+    list(TRANSFORM MyTargetSourcesBuildLocalInterface PREPEND "$<BUILD_LOCAL_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Source/")
+    list(TRANSFORM MyTargetSourcesBuildLocalInterface APPEND ">")
+
+    target_sources(${MY_BASE_PROJECT_NAME_FULL}_Source
+      INTERFACE
+        ${MyTargetSourcesBuildLocalInterface}
+      )
+  endblock()
+
+  # Add source file paths for `INSTALL_INTERFACE` users.
+  block(SCOPE_FOR VARIABLES)
+    # Wrap each source file path in the conditional generator expression.
+    set(MyTargetSourcesInstallInterface ${MyTargetSources})
+    list(TRANSFORM MyTargetSourcesInstallInterface PREPEND "$<INSTALL_INTERFACE:${MY_GNU_INSTALL_SRCDIR}/${PROJECT_NAME}/")
+    list(TRANSFORM MyTargetSourcesInstallInterface APPEND ">")
+
+    target_sources(${MY_BASE_PROJECT_NAME_FULL}_Source
+      INTERFACE
+        ${MyTargetSourcesInstallInterface}
+      )
+  endblock()
+
+endblock()
 
 # Note that we do not "find package" for our parent project. We don't need to since we are built in the same
 # cmake invocation as the it. That means we're being processed during the same configuration step as them, which
@@ -96,13 +134,20 @@ target_sources(${MY_BASE_PROJECT_NAME_FULL}_Include
 # even need to exist yet because CMake only validates the existence of targets at the end of the entire
 # configuration process.
 
+# Add dependencies to other targets. For imported targets, it's important to only depend on them if we
+# are BUILD_LOCAL_INTERFACE, because we don't want them to get mixed into our export.
+target_link_libraries(${MY_BASE_PROJECT_NAME_FULL}_Source
+  INTERFACE
+    $<BUILD_LOCAL_INTERFACE:${MY_BASE_PROJECT_NAME_NAMESPACE}::${MY_BASE_PROJECT_NAME_LEAFNAME}::Include>
+  )
+
 # Associate our targets with an export and specify how their files would be installed.
-install(TARGETS ${MY_BASE_PROJECT_NAME_FULL}_Include
+install(TARGETS ${MY_BASE_PROJECT_NAME_FULL}_Source
   EXPORT "${MY_BASE_PROJECT_NAME_FULL}Export"
-  COMPONENT "Include"
-  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}"
-  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}"
-  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}/${PROJECT_NAME}"
+  COMPONENT "Source"
+  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
   #
   # Add to interface include directories.
   #
@@ -114,5 +159,12 @@ install(TARGETS ${MY_BASE_PROJECT_NAME_FULL}_Include
   #
   INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}"
   # Copy over any interface-facing headers.
-  FILE_SET ${MY_BASE_PROJECT_NAME_FULL_LOWERCASE}_include_interface_headers DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}"
+  FILE_SET ${MY_BASE_PROJECT_NAME_FULL_LOWERCASE}_source_interface_headers DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}"
+  )
+
+# Specify how installing should copy our source files to the install directory. Note: The destination must
+# match with the `target_sources` paths that we used.
+install(
+  FILES $<TARGET_PROPERTY:${MY_BASE_PROJECT_NAME_FULL}_Source,INTERFACE_SOURCES>
+  DESTINATION "${MY_GNU_INSTALL_SRCDIR}/${PROJECT_NAME}"
   )

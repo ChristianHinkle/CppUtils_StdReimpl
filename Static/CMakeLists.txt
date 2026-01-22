@@ -11,11 +11,12 @@ string(TOUPPER ${MY_BASE_PROJECT_NAME_FULL} MY_BASE_PROJECT_NAME_FULL_UPPERCASE)
 SET(MY_BASE_PROJECT_NAME_NAMESPACE "CppUtils")
 SET(MY_BASE_PROJECT_NAME_LEAFNAME "StdReimpl")
 
-project(${MY_BASE_PROJECT_NAME_FULL}_Include
+project(${MY_BASE_PROJECT_NAME_FULL}_Static
   VERSION 0.1.0
   LANGUAGES CXX
   )
 
+include(GenerateExportHeader)
 include(GNUInstallDirs)
 
 #
@@ -25,7 +26,7 @@ include(GNUInstallDirs)
 # the DAM library of MeddySDK, we name it "MeddySDK_DAM" instead of just "DAM", because that would be very vague.
 #
 
-add_library(${MY_BASE_PROJECT_NAME_FULL}_Include INTERFACE)
+add_library(${MY_BASE_PROJECT_NAME_FULL}_Static STATIC)
 
 #
 # Set output names of our targets.
@@ -34,7 +35,7 @@ add_library(${MY_BASE_PROJECT_NAME_FULL}_Include INTERFACE)
 # target name. E.g., for MeddySDKCLI, we name its executable file "meddy" to suit our desired command line usage.
 #
 
-set_target_properties(${MY_BASE_PROJECT_NAME_FULL}_Include
+set_target_properties(${MY_BASE_PROJECT_NAME_FULL}_Static
   PROPERTIES
     OUTPUT_NAME "${MY_BASE_PROJECT_NAME_FULL}"
   )
@@ -54,11 +55,18 @@ set_target_properties(${MY_BASE_PROJECT_NAME_FULL}_Include
 # `FetchContent_Declare()`.
 #
 
-add_library(${MY_BASE_PROJECT_NAME_NAMESPACE}::${MY_BASE_PROJECT_NAME_LEAFNAME}::Include ALIAS ${MY_BASE_PROJECT_NAME_FULL}_Include)
+add_library(${MY_BASE_PROJECT_NAME_NAMESPACE}::${MY_BASE_PROJECT_NAME_LEAFNAME}::Static ALIAS ${MY_BASE_PROJECT_NAME_FULL}_Static)
+
+# Generate a cpp header file that provides export macros for our library.
+generate_export_header(${MY_BASE_PROJECT_NAME_FULL}_Static
+  BASE_NAME ${MY_BASE_PROJECT_NAME_FULL}
+  EXPORT_FILE_NAME "${CMAKE_CURRENT_BINARY_DIR}/Include/${MY_BASE_PROJECT_NAME_FULL_LOWERCASE}_static_export.h"
+  INCLUDE_GUARD_NAME "${MY_BASE_PROJECT_NAME_FULL_UPPERCASE}_STATIC_EXPORT_H"
+  )
 
 # List out required language features.
-target_compile_features(${MY_BASE_PROJECT_NAME_FULL}_Include
-  INTERFACE
+target_compile_features(${MY_BASE_PROJECT_NAME_FULL}_Static
+  PUBLIC
     cxx_std_20
   )
 
@@ -74,20 +82,14 @@ target_compile_features(${MY_BASE_PROJECT_NAME_FULL}_Include
 #
 # A nice benefit of listing all header files is that they can be easily-discoverable by IDEs.
 #
-# We make sure to group all of our header files into a subfolder named after our project. This is
-# important for avoiding include file path naming conflicts with other libraries. It also gives
-# us the freedom to name our files however, while still having context in their include path names.
-#
-target_sources(${MY_BASE_PROJECT_NAME_FULL}_Include
-  INTERFACE
-    FILE_SET ${MY_BASE_PROJECT_NAME_FULL_LOWERCASE}_include_interface_headers
+target_sources(${MY_BASE_PROJECT_NAME_FULL}_Static
+  PUBLIC
+    FILE_SET ${MY_BASE_PROJECT_NAME_FULL_LOWERCASE}_static_public_headers
       TYPE HEADERS
       BASE_DIRS
-        "${CMAKE_CURRENT_SOURCE_DIR}/Include"
+        "${CMAKE_CURRENT_BINARY_DIR}/Include" # The base directory of generated headers.
       FILES
-        "${CMAKE_CURRENT_SOURCE_DIR}/Include/${MY_BASE_PROJECT_NAME_FULL}_Export.h"
-        "${CMAKE_CURRENT_SOURCE_DIR}/Include/${MY_BASE_PROJECT_NAME_FULL}_include_export.h"
-        "${CMAKE_CURRENT_SOURCE_DIR}/Include/${MY_BASE_PROJECT_NAME_FULL}/Concepts.h"
+        "${CMAKE_CURRENT_BINARY_DIR}/Include/${MY_BASE_PROJECT_NAME_FULL_LOWERCASE}_static_export.h"
   )
 
 # Note that we do not "find package" for our parent project. We don't need to since we are built in the same
@@ -96,10 +98,19 @@ target_sources(${MY_BASE_PROJECT_NAME_FULL}_Include
 # even need to exist yet because CMake only validates the existence of targets at the end of the entire
 # configuration process.
 
+# Add dependencies to other targets. For imported targets, it's important to only depend on them if we
+# are BUILD_LOCAL_INTERFACE, because we don't want them to get mixed into our export.
+target_link_libraries(${MY_BASE_PROJECT_NAME_FULL}_Static
+  INTERFACE
+    $<BUILD_LOCAL_INTERFACE:${MY_BASE_PROJECT_NAME_NAMESPACE}::${MY_BASE_PROJECT_NAME_LEAFNAME}::Include>
+  PRIVATE
+    $<BUILD_LOCAL_INTERFACE:${MY_BASE_PROJECT_NAME_NAMESPACE}::${MY_BASE_PROJECT_NAME_LEAFNAME}::Source>
+  )
+
 # Associate our targets with an export and specify how their files would be installed.
-install(TARGETS ${MY_BASE_PROJECT_NAME_FULL}_Include
+install(TARGETS ${MY_BASE_PROJECT_NAME_FULL}_Static
   EXPORT "${MY_BASE_PROJECT_NAME_FULL}Export"
-  COMPONENT "Include"
+  COMPONENT "Static"
   LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}"
   ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}/${PROJECT_NAME}"
   RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}/${PROJECT_NAME}"
@@ -113,6 +124,6 @@ install(TARGETS ${MY_BASE_PROJECT_NAME_FULL}_Include
   # both packaged library usage and subproject library usage, without having to adapt their code to either use case.
   #
   INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}"
-  # Copy over any interface-facing headers.
-  FILE_SET ${MY_BASE_PROJECT_NAME_FULL_LOWERCASE}_include_interface_headers DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}"
+  # Copy over public headers.
+  FILE_SET ${MY_BASE_PROJECT_NAME_FULL_LOWERCASE}_static_public_headers DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}"
   )
