@@ -6,16 +6,36 @@
 
 /**
  * @brief Rewrites of the standard library's concepts library. This is necessary for certain
- *        compilers that don't have C++20 standard concepts library enabled, e.g., for PS5.
+ *        compilers that may not have the C++20 standard concepts library enabled, e.g., for certain
+ *        gaming consoles.
  */
 namespace CppUtils::StdReimpl::Concepts
 {
-    template <class TDerived, class TBase>
+    /**
+     * @see https://eel.is/c++draft/concept.derived#concept:derived_from
+     */
+    template <class Derived, class Base>
     concept derived_from =
-        std::is_base_of_v<TBase, TDerived>
-        && std::is_convertible_v<const volatile TDerived*, const volatile TBase*>;
+        std::is_base_of_v<Base, Derived> &&
+        std::is_convertible_v<const volatile Derived*, const volatile Base*>;
 
+    /**
+     * @see https://eel.is/c++draft/concepts.arithmetic#concept:floating_point
+     */
     template <class T>
-    concept floating_point =
-        std::is_floating_point_v<T>;
+    concept floating_point = std::is_floating_point_v<T>;
+
+    /**
+     * @see https://eel.is/c++draft/concept.invocable#concept:invocable
+     */
+    template <class F, class... Args>
+    concept invocable = requires(F&& f, Args&&... args) {
+        std::invoke(std::forward<F>(f), std::forward<Args>(args)...); // not required to be equality-preserving
+    };
+
+    /**
+     * @see https://eel.is/c++draft/concept.regularinvocable#concept:regular_invocable
+     */
+    template <class F, class... Args>
+    concept regular_invocable = CppUtils::StdReimpl::Concepts::invocable<F, Args...>;
 }
