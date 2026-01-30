@@ -9,7 +9,7 @@
  *        compilers that may not have the C++20 standard concepts library enabled, e.g., for certain
  *        gaming consoles.
  */
-namespace CppUtils::StdReimpl::Concepts
+namespace StdReimpl
 {
     /**
      * @see https://eel.is/c++draft/concept.derived#concept:derived_from
@@ -37,5 +37,5 @@ namespace CppUtils::StdReimpl::Concepts
      * @see https://eel.is/c++draft/concept.regularinvocable#concept:regular_invocable
      */
     template <class F, class... Args>
-    concept regular_invocable = CppUtils::StdReimpl::Concepts::invocable<F, Args...>;
+    concept regular_invocable = StdReimpl::invocable<F, Args...>;
 }
