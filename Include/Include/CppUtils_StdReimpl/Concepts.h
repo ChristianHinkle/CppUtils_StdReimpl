@@ -3,6 +3,7 @@
 #pragma once
 
 #include <type_traits>
+#include <functional>
 
 /**
  * @brief Rewrites of the standard library's concepts library. This is necessary for certain
