@@ -95,16 +95,28 @@ target_sources(${MY_BASE_PROJECT_NAME_FULL}_Source
 # Add all source files.
 block(SCOPE_FOR VARIABLES)
 
-  # List of all source files (relative to our "Source" directory).
+  # We have file lists separated into "Files.cmake" files and include them here in the generalized cmake
+  # code so that code writers don't have to dig through this cmake code to add their source files.
+  include("Files.cmake")
+
+  # We expect the include to define this variable for us to use.
+  if(NOT DEFINED FILES_CMAKE_RESULT)
+    message(FATAL_ERROR "The files include did not define the variable `FILES_CMAKE_RESULT` for us to use.")
+  endif()
+
+  # List out all our source files, relative to our "Files" directory.
   set(MyTargetSources
-    "${MY_BASE_PROJECT_NAME_FULL}_Export.cpp"
+    ${FILES_CMAKE_RESULT}
     )
+
+  # Unset this variable, as it is no longer needed.
+  unset(FILES_CMAKE_RESULT)
 
   # Add source file paths for `BUILD_LOCAL_INTERFACE` users.
   block(SCOPE_FOR VARIABLES)
     # Wrap each source file path in the conditional generator expression.
     set(MyTargetSourcesBuildLocalInterface ${MyTargetSources})
-    list(TRANSFORM MyTargetSourcesBuildLocalInterface PREPEND "$<BUILD_LOCAL_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Source/")
+    list(TRANSFORM MyTargetSourcesBuildLocalInterface PREPEND "$<BUILD_LOCAL_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Files/")
     list(TRANSFORM MyTargetSourcesBuildLocalInterface APPEND ">")
 
     target_sources(${MY_BASE_PROJECT_NAME_FULL}_Source

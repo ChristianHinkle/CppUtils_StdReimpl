@@ -78,17 +78,28 @@ target_compile_features(${MY_BASE_PROJECT_NAME_FULL}_Include
 # important for avoiding include file path naming conflicts with other libraries. It also gives
 # us the freedom to name our files however, while still having context in their include path names.
 #
+
+# We have file lists separated into "Files.cmake" files and include them here in the generalized cmake
+# code so that code writers don't have to dig through this cmake code to add their source files.
+include("Files.cmake")
+
+# We expect the include to define this variable for us to use.
+if(NOT DEFINED FILES_CMAKE_RESULT)
+  message(FATAL_ERROR "The files include did not define the variable `FILES_CMAKE_RESULT` for us to use.")
+endif()
+
 target_sources(${MY_BASE_PROJECT_NAME_FULL}_Include
   INTERFACE
     FILE_SET ${MY_BASE_PROJECT_NAME_FULL_LOWERCASE}_include_interface_headers
       TYPE HEADERS
       BASE_DIRS
-        "${CMAKE_CURRENT_SOURCE_DIR}/Include"
+        "${CMAKE_CURRENT_SOURCE_DIR}/Files"
       FILES
-        "${CMAKE_CURRENT_SOURCE_DIR}/Include/${MY_BASE_PROJECT_NAME_FULL}_Export.h"
-        "${CMAKE_CURRENT_SOURCE_DIR}/Include/${MY_BASE_PROJECT_NAME_FULL}_include_export.h"
-        "${CMAKE_CURRENT_SOURCE_DIR}/Include/${MY_BASE_PROJECT_NAME_NAMESPACE}/${MY_BASE_PROJECT_NAME_LEAFNAME}/Concepts.h"
+        ${FILES_CMAKE_RESULT}
   )
+
+# Unset this variable, as it is no longer needed.
+unset(FILES_CMAKE_RESULT)
 
 # Note that we do not "find package" for our parent project. We don't need to since we are built in the same
 # cmake invocation as the it. That means we're being processed during the same configuration step as them, which
