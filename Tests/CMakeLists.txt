@@ -22,14 +22,17 @@ project(${MY_BASE_PROJECT_NAME_FULL}_Tests
 # even need to exist yet because CMake only validates the existence of targets at the end of the entire
 # configuration process.
 
-add_library(IncludeCompileTest STATIC EXCLUDE_FROM_ALL)
-target_compile_features(IncludeCompileTest PUBLIC cxx_std_20)
-target_sources(IncludeCompileTest PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Source/IncludeCompileTest.cpp")
-target_link_libraries(IncludeCompileTest PRIVATE ${MY_BASE_PROJECT_NAME_NAMESPACE}::${MY_BASE_PROJECT_NAME_LEAFNAME}::Include)
+add_library(${MY_BASE_PROJECT_NAME_FULL}_IncludeCompileTest STATIC EXCLUDE_FROM_ALL)
+target_compile_features(${MY_BASE_PROJECT_NAME_FULL}_IncludeCompileTest PUBLIC cxx_std_20)
+target_sources(${MY_BASE_PROJECT_NAME_FULL}_IncludeCompileTest PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/Source/IncludeCompileTest.cpp")
+target_link_libraries(${MY_BASE_PROJECT_NAME_FULL}_IncludeCompileTest
+  PRIVATE
+    ${MY_BASE_PROJECT_NAME_NAMESPACE}::${MY_BASE_PROJECT_NAME_LEAFNAME}::Include
+  )
 
 # This test simply ensures that our header files' code compiles successfully when included in a cpp file.
 add_test(
-  NAME CppUtils.StdReimpl.IncludeCompileTest
+  NAME ${MY_BASE_PROJECT_NAME_NAMESPACE}.${MY_BASE_PROJECT_NAME_LEAFNAME}.IncludeCompileTest
   COMMAND ${CMAKE_COMMAND}
     --build ${CMAKE_CURRENT_BINARY_DIR}
     --target IncludeCompileTest
