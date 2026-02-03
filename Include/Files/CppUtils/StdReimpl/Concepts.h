@@ -12,6 +12,22 @@
  */
 namespace StdReimpl
 {
+    namespace Detail
+    {
+        /**
+         * @see https://eel.is/c++draft/concept.same#concept:same-as-impl
+         */
+        template <class T, class U>
+        concept same_as_impl = std::is_same_v<T, U>;
+    }
+
+    /**
+     * @see https://eel.is/c++draft/concept.same#concept:same_as
+     */
+    template <class T, class U>
+    concept same_as =
+        StdReimpl::Detail::same_as_impl<T, U> && StdReimpl::Detail::same_as_impl<U, T>;
+
     /**
      * @see https://eel.is/c++draft/concept.derived#concept:derived_from
      */
