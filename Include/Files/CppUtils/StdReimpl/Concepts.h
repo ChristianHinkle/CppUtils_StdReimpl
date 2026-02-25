@@ -37,6 +37,24 @@ namespace StdReimpl
         std::is_convertible_v<const volatile Derived*, const volatile Base*>;
 
     /**
+     * @see https://eel.is/c++draft/concepts.arithmetic#concept:integral
+     */
+    template <class T>
+    concept integral = std::is_integral_v<T>;
+
+    /**
+     * @see https://eel.is/c++draft/concepts.arithmetic#concept:signed_integral
+     */
+    template <class T>
+    concept signed_integral = StdReimpl::integral<T> && std::is_signed_v<T>;
+
+    /**
+     * @see https://eel.is/c++draft/concepts.arithmetic#concept:unsigned_integral
+     */
+    template <class T>
+    concept unsigned_integral = StdReimpl::integral<T> && !StdReimpl::signed_integral<T>;
+
+    /**
      * @see https://eel.is/c++draft/concepts.arithmetic#concept:floating_point
      */
     template <class T>
