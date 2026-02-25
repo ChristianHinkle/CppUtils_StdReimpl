@@ -12,7 +12,7 @@ namespace StdReimpl
     /**
      * @brief A feature from C++23.
      * @see https://eel.is/c++draft/func.invoke
-     * @see https://en.cppreference.com/w/cpp/utility/functional/invoke.html
+     * @see https://cppreference.com/w/cpp/utility/functional/invoke.html
      */
     template <class R, class F, class... Args>
         requires (std::is_invocable_r_v<R, F, Args...>)
