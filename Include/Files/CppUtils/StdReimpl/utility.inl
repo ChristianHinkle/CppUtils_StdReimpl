@@ -1,4 +1,5 @@
 // Copyright (c) 2023-2025 Christian Hinkle, Brian Hinkle.
 
+#pragma once
+
 #include <CppUtils/StdReimpl/utility.h>
-#include <CppUtils/StdReimpl/utility.inl>

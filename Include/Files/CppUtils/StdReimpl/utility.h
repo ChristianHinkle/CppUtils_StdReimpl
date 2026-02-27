@@ -36,3 +36,5 @@ namespace StdReimpl
     template <auto V>
     constexpr constant_arg_t<V> constant_arg{};
 }
+
+#include <CppUtils/StdReimpl/utility.inl>
