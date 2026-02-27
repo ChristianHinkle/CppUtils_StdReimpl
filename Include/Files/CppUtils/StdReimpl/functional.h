@@ -4,7 +4,7 @@
 
 #include <functional>
 #include <type_traits>
-#include <CppUtils/StdReimpl/Utility.h>
+#include <CppUtils/StdReimpl/utility.h>
 #include <memory>
 
 namespace StdReimpl
@@ -572,4 +572,4 @@ namespace StdReimpl
 #endif // #if 0
 }
 
-#include <CppUtils/StdReimpl/Functional.inl>
+#include <CppUtils/StdReimpl/functional.inl>
