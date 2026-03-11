@@ -32,7 +32,7 @@ add_library(${MY_BASE_PROJECT_NAME_FULL}_Object OBJECT)
 # Set output names of our targets.
 #
 # This determines the name of the binary files generated for the target. The name may differ from the actual
-# target name. E.g., for MeddySDKCLI, we name its executable file "meddy" to suit our desired command line usage.
+# target name. E.g., for MeddyCLI, we name its executable file "meddy" to suit our desired command line usage.
 #
 
 set_target_properties(${MY_BASE_PROJECT_NAME_FULL}_Object
