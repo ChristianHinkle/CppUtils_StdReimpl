@@ -40,6 +40,17 @@ set_target_properties(${MY_BASE_PROJECT_NAME_FULL}_Shared
     OUTPUT_NAME "${MY_BASE_PROJECT_NAME_FULL}"
   )
 
+# Customize the `IMPORT_SUFFIX` to avoid conflicts with the static library output artifact. The `IMPORT_SUFFIX` is the
+# file extension of this shared library's import library output artifact, which might be the same file extension as static
+# library output artifacts. E.g., on windows, static libraries output ".lib" artifacts, and shared libraries also
+# ouput ".lib" artifacts (which is the "import library" artifact). We change the file extension here so that it also
+# contains the shared library output artifact file extension. This is to distinguish the shared library's potential import
+# library output artifact from its shared library ouput artifact.
+set_target_properties(${MY_BASE_PROJECT_NAME_FULL}_Shared
+  PROPERTIES
+    IMPORT_SUFFIX "${CMAKE_SHARED_LIBRARY_SUFFIX}${CMAKE_IMPORT_LIBRARY_SUFFIX}"
+  )
+
 #
 # Add alias targets.
 #
