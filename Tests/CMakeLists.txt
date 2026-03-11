@@ -35,5 +35,5 @@ add_test(
   NAME ${MY_BASE_PROJECT_NAME_NAMESPACE}.${MY_BASE_PROJECT_NAME_LEAFNAME}.IncludeCompileTest
   COMMAND ${CMAKE_COMMAND}
     --build ${CMAKE_CURRENT_BINARY_DIR}
-    --target IncludeCompileTest
+    --target ${MY_BASE_PROJECT_NAME_FULL}_IncludeCompileTest
   )
