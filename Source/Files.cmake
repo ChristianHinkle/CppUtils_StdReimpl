@@ -9,4 +9,5 @@ set(FILES_CMAKE_RESULT
   "functional.cpp"
   "utility.cpp"
   "cstdlib.cpp"
+  "bit.cpp"
   )
